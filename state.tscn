@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://pinnypl4e2l1"]
-
-[ext_resource type="Script" uid="uid://b1ivscla6s2db" path="res://AI-Brain/Scripts/State.gd" id="1_1c6mt"]
-
-[node name="State" type="Node"]
-script = ExtResource("1_1c6mt")
-metadata/_custom_type_script = "uid://b1ivscla6s2db"

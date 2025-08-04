@@ -15,6 +15,8 @@ var actor_name : String
 signal state_changed(new_state : State)
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
 	if actor:
 		actor_name = actor.name
 
@@ -22,28 +24,25 @@ func _ready() -> void:
 func process_states():
 	for c in get_children(): #look through all the children
 		if c is State: #make sure the child is a state
-			if c.evaluate() == SUCCESS: #if the state succeeds then enter that state
-				print("success")
-				if c == current_state: #are we already in that state?
-					print("do nothing")
-				else:
+			if c.evaluate(actor,agent,blackboard) == SUCCESS: #if the state succeeds then enter that state
+				if !c == current_state: #are we already in that state?
 					if current_state: #is there already a current state? if so exit it
-						current_state.state_exited(actor,agent,blackboard) 
-					c.state_entered(actor,agent,blackboard) #enter the new state
+						current_state._state_exited(actor,agent,blackboard) 
+					c._state_entered(actor,agent,blackboard) #enter the new state
 					current_state = c
 					state_changed.emit(c)
 				break
-			else:
-				print("Failure")
 		else:
 			print("child was not a state")
 
 func tick():
 	if current_state:
-		current_state.tick(actor,agent,blackboard) #process our current state
+		current_state._tick(actor,agent,blackboard) #process our current state
 	pass
 
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	process_states()
 	tick()
 	if current_state != null:
